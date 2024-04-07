@@ -7,6 +7,8 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  query,
+  onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import Image from "next/image";
@@ -37,14 +39,17 @@ export default function Home() {
     }
   };
 
-  const getRecipes = async () => {
-    const data = await getDocs(recipeCollectionRef);
-    setRecipeList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  };
-
   useEffect(() => {
-    getRecipes();
-  });
+    const querydata = query(recipeCollectionRef);
+    const unsuscribe = onSnapshot(querydata, (snapshot) => {
+      let recipes = [];
+      snapshot.forEach((doc) => {
+        recipes.push({ ...doc.data(), id: doc.id });
+      });
+      setRecipeList(recipes);
+    });
+    return () => unsuscribe;
+  }, []);
 
   return (
     <div className="homePage bg-green-950 h-full">
