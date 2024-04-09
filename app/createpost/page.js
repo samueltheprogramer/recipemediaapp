@@ -107,8 +107,18 @@ export default function CreatePost() {
             onChange={(e) => setRecipeImage(e.target.files[0])}
           />
         </div>
-        <button onClick={handleUplodeImage}>Uplode Image</button>
-        <button onClick={createPost}> Submit Recipe</button>
+        <button
+          onClick={handleUplodeImage}
+          className=" hover:bg-green-500 rounded-full"
+        >
+          step 1 :Uplode Image
+        </button>
+        <button
+          onClick={createPost}
+          className=" hover:bg-green-500 rounded-full"
+        >
+          step 2 :Submit Recipe
+        </button>
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ import {
   updateDoc,
   query,
   onSnapshot,
+  addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import Image from "next/image";
@@ -20,6 +22,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const [recipeLists, setRecipeList] = useState([]);
   const recipeCollectionRef = collection(db, "recipes");
+  const likedRecipesRef = collection(db, "likedrecipes");
 
   const router = useRouter();
 
@@ -50,6 +53,28 @@ export default function Home() {
     });
     return () => unsuscribe;
   }, []);
+
+  const addToLikedRecipes = async (
+    recipeName,
+    durations,
+    ingredients,
+    instructions,
+    autherNamel,
+    autherImagel,
+    recipeImagel
+  ) => {
+    await addDoc(likedRecipesRef, {
+      recipeName,
+      durations,
+      ingredients,
+      instructions,
+      autherNamel,
+      autherImagel,
+      recipeImagel,
+      userId: auth.currentUser.uid,
+      createdAt: serverTimestamp(),
+    });
+  };
 
   return (
     <div className="homePage bg-green-950 h-full">
@@ -118,6 +143,28 @@ export default function Home() {
               <h1 className="font-serif text-lg font-extrabold">Duration</h1>
             </div>
             <h1>{recipe.durations}</h1>
+            <div>
+              <label htmlFor="">like:</label>
+              <input
+                className="rounded-md bg-white"
+                onChange={(e) => {
+                  e.target.checked
+                    ? addToLikedRecipes(
+                        recipe?.recipeName,
+                        recipe?.durations,
+                        recipe?.ingredients,
+                        recipe?.instructions,
+                        recipe?.author?.name,
+                        recipe?.author?.photoURL,
+                        recipe?.recipeImageName
+                      )
+                    : "";
+                }}
+                type="checkbox"
+                name=""
+                id=""
+              />
+            </div>
             <Image
               src={recipe?.author?.photoURL}
               width={25}

@@ -6,8 +6,15 @@ export default function Navbar() {
   return (
     <div className="flex justify-center items-center w-full bg-yellow-500">
       <div>
-        <Link href="/home">Home</Link>
-        <Link href="/createpost">CreateRecipes</Link>
+        <Link className="text-lg" href="/home">
+          Home
+        </Link>
+        <Link className="text-lg" href="/createpost">
+          CreateRecipes
+        </Link>
+        <Link className="text-lg" href="/likedrecipes">
+          LikedRecipes
+        </Link>
       </div>
     </div>
   );
